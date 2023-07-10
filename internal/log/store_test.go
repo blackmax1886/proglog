@@ -21,7 +21,7 @@ func TestStoreAppendRead(t *testing.T) {
 	require.NoError(t, err)
 
 	testAppend(t, s)
-	testRead(t,s)
+	testRead(t, s)
 	testReadAt(t, s)
 
 	s, err = newStore(f)
@@ -53,7 +53,7 @@ func testReadAt(t *testing.T, s *store) {
 	t.Helper()
 	for i, off := uint64(1), int64(0); i < 4; i++ {
 		b := make([]byte, lenWidth)
-		n , err := s.ReadAt(b, off)
+		n, err := s.ReadAt(b, off)
 		require.NoError(t, err)
 		require.Equal(t, lenWidth, n)
 		off += int64(n)

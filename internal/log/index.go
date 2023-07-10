@@ -10,7 +10,7 @@ import (
 const (
 	offWidth uint64 = 4
 	posWidth uint64 = 8
-	entWidth = offWidth + posWidth
+	entWidth        = offWidth + posWidth
 )
 
 type index struct {
@@ -28,7 +28,7 @@ func newIndex(f *os.File, c Config) (*index, error) {
 		return nil, err
 	}
 	idx.size = uint64(fi.Size())
-	if err = os.Truncate(f.Name(), int64(c.Segment.MaxIndexBytes),); err != nil {
+	if err = os.Truncate(f.Name(), int64(c.Segment.MaxIndexBytes)); err != nil {
 		return nil, err
 	}
 	if idx.mmap, err = gommap.Map(
@@ -67,8 +67,8 @@ func (i *index) Read(in int64) (out uint32, pos uint64, err error) {
 	if i.size < pos+entWidth {
 		return 0, 0, io.EOF
 	}
-	out = enc.Uint32(i.mmap[pos: pos+offWidth])
-	pos = enc.Uint64(i.mmap[pos+offWidth: pos+entWidth])
+	out = enc.Uint32(i.mmap[pos : pos+offWidth])
+	pos = enc.Uint64(i.mmap[pos+offWidth : pos+entWidth])
 	return out, pos, nil
 }
 

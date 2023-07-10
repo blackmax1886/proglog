@@ -15,10 +15,10 @@ func TestSegment(t *testing.T) {
 	defer os.RemoveAll(dir)
 
 	want := &api.Record{Value: []byte("hello world")}
-	
+
 	c := Config{}
 	c.Segment.MaxStoreBytes = 1024
-	c.Segment.MaxIndexBytes = entWidth*3
+	c.Segment.MaxIndexBytes = entWidth * 3
 
 	s, err := newSegment(dir, 16, c)
 	require.NoError(t, err)
@@ -43,7 +43,7 @@ func TestSegment(t *testing.T) {
 	require.NoError(t, s.Close())
 
 	p, _ := proto.Marshal(want)
-	c.Segment.MaxStoreBytes = uint64(len(p) + lenWidth) * 4
+	c.Segment.MaxStoreBytes = uint64(len(p)+lenWidth) * 4
 	c.Segment.MaxIndexBytes = 1024
 	// 既存のsegmentを再構築
 	s, err = newSegment(dir, 16, c)
