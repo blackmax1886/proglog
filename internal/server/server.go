@@ -15,14 +15,14 @@ import (
 )
 
 type Config struct {
-	CommitLog CommitLog
+	CommitLog  CommitLog
 	Authorizer Authorizer
 }
 
 const (
 	objectWildcard = "*"
-	produceAction = "produce"
-	consumeAction = "consume"
+	produceAction  = "produce"
+	consumeAction  = "consume"
 )
 
 var _ api.LogServer = (*grpcServer)(nil)
@@ -31,10 +31,10 @@ func NewGRPCServer(config *Config, grpcOpts ...grpc.ServerOption) (*grpc.Server,
 	grpcOpts = append(grpcOpts, grpc.StreamInterceptor(
 		grpc_middleware.ChainStreamServer(
 			grpc_auth.StreamServerInterceptor(authenticate),
-		)), 
+		)),
 		grpc.UnaryInterceptor(grpc_middleware.ChainUnaryServer(
-		grpc_auth.UnaryServerInterceptor(authenticate),
-	)))
+			grpc_auth.UnaryServerInterceptor(authenticate),
+		)))
 	gsrv := grpc.NewServer(grpcOpts...)
 	srv, err := newgrpcServer(config)
 	if err != nil {
@@ -151,7 +151,6 @@ func authenticate(ctx context.Context) (context.Context, error) {
 
 	return ctx, nil
 }
-
 
 func subject(ctx context.Context) string {
 	return ctx.Value(subjectContextKey{}).(string)

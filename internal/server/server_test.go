@@ -27,7 +27,7 @@ func TestServer(t *testing.T) {
 		"produce/consume a message to/from the log succeeds": testProduceConsume,
 		"produce/consume stream succeeds":                    testProduceConsumeStream,
 		"consume past log boundary fails":                    testConsumePastBoundary,
-		"unauthorized fails": testUnauthorized,
+		"unauthorized fails":                                 testUnauthorized,
 	} {
 		t.Run(scenario, func(t *testing.T) {
 			rootClient, nobodyClient, config, teardown := setupTest(t, nil)
@@ -52,12 +52,12 @@ func setupTest(t *testing.T, fn func(*Config)) (
 		*grpc.ClientConn,
 		api.LogClient,
 		[]grpc.DialOption,
-	){
+	) {
 		tlsConfig, err := config.SetupTLSConfig(config.TLSConfig{
 			CertFile: certPath,
-			KeyFile: keyPath,
-			CAFile: config.CAFile,
-			Server: false,
+			KeyFile:  keyPath,
+			CAFile:   config.CAFile,
+			Server:   false,
 		})
 		require.NoError(t, err)
 		tlsCreds := credentials.NewTLS(tlsConfig)
@@ -81,11 +81,11 @@ func setupTest(t *testing.T, fn func(*Config)) (
 	)
 
 	serverTLSConfig, err := config.SetupTLSConfig(config.TLSConfig{
-		CertFile: config.ServerCertFile,
-		KeyFile: config.ServerKeyFile,
-		CAFile: config.CAFile,
+		CertFile:      config.ServerCertFile,
+		KeyFile:       config.ServerKeyFile,
+		CAFile:        config.CAFile,
 		ServerAddress: l.Addr().String(),
-		Server: true,
+		Server:        true,
 	})
 	require.NoError(t, err)
 	serverCreds := credentials.NewTLS(serverTLSConfig)
@@ -98,7 +98,7 @@ func setupTest(t *testing.T, fn func(*Config)) (
 
 	authorizer := auth.New(config.ACLModelFile, config.ACLPolicyFile)
 	cfg = &Config{
-		CommitLog: clog,
+		CommitLog:  clog,
 		Authorizer: authorizer,
 	}
 	if fn != nil {
@@ -219,14 +219,14 @@ func testUnauthorized(
 	_,
 	client api.LogClient,
 	config *Config,
-){
+) {
 	ctx := context.Background()
 	produce, err := client.Produce(ctx,
-	&api.ProduceRequest{
-		Record: &api.Record{
-			Value: []byte("hello world"),
-		},
-	})
+		&api.ProduceRequest{
+			Record: &api.Record{
+				Value: []byte("hello world"),
+			},
+		})
 	if produce != nil {
 		t.Fatalf("produce response should be nil")
 	}
